@@ -1,4 +1,5 @@
 const express = require('express');
+const Joi = require('joi');
 const app = express();
 const port = 3130;
 
@@ -13,51 +14,78 @@ const logout_error = {
 };
 const illegal_input = {
 	message: "The numbers you entered are not valid"
-}
+};
 const not_logged_in = {
 	message: "You are not currently logged in"
-}
+};
 const successful_login = {
 	message: "Welcome first name"
-}
+};
 const successful_logout = {
 	message: "You have been successfully logged out"
+};
+
+const input_schema = {
+	num1: Joi.number().required(),
+	num2: Joi.number().required()
 }
 
+const input_schema_div = {
+	num1: Joi.number().required(),
+	num2: Joi.number().min(1).required()
+}
 //API end point for add function.
 app.post('/add', (request, response) =>	{
-	var num1 = parseInt(request.body.num1);
-	var num2 = parseInt(request.body.num2);
-	var sum = num1 + num2;
-	var successful_action = {
-		message: "The action was successful",
-		result: sum.toString()
+	const validation_result = Joi.validate(request.body, input_schema);
+
+	if (validation_result.error)	{
+		response.send(illegal_input)
+	}	else	{
+		var num1 = parseFloat(request.body.num1);
+		var num2 = parseFloat(request.body.num2);
+		var sum = num1 + num2;
+		var successful_action = {
+			message: "The action was successful",
+			result: sum.toString()
+		}
+		response.send(successful_action)
 	}
-	response.send(successful_action)
 });
 
 //API end point for multiply function.
 app.post('/multiply', (request, response) =>	{
-	var num1 = parseInt(request.body.num1);
-	var num2 = parseInt(request.body.num2);
-	var prod = num1 * num2;
-	var successful_action = {
-		message: "The action was successful",
-		result: prod.toString()
+	const validation_result = Joi.validate(request.body, input_schema);
+
+	if (validation_result.error)	{
+		response.send(illegal_input)
+	}	else	{
+		var num1 = parseFloat(request.body.num1);
+		var num2 = parseFloat(request.body.num2);
+		var prod = num1 * num2;
+		var successful_action = {
+			message: "The action was successful",
+			result: prod.toString()
+		}
+		response.send(successful_action)
 	}
-	response.send(successful_action)
 });
 
 //API end point for divide function.
 app.post('/divide', (request, response) =>	{
-	var num1 = parseInt(request.body.num1);
-	var num2 = parseInt(request.body.num2);
-	var div = num1 / num2;
-	var successful_action = {
-		message: "The action was successful",
-		result: div.toString()
+	const validation_result = Joi.validate(request.body, input_schema_div);
+
+	if (validation_result.error)	{
+		response.send(illegal_input)
+	}	else	{
+		var num1 = parseFloat(request.body.num1);
+		var num2 = parseFloat(request.body.num2);
+		var quo = num1 / num2;
+		var successful_action = {
+			message: "The action was successful",
+			result: quo.toString()
+		}
+		response.send(successful_action)
 	}
-	response.send(successful_action)
 });
 
 app.listen(port, () => {
