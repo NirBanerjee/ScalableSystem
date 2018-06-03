@@ -31,25 +31,21 @@ const users = [
 const login_error = {
 	message: "There seems to be an issue with the username/password combination that you entered"
 };
-const logout_error = {
-	message: "You are not currently logged in"
-};
 const illegal_input = {
 	message: "The numbers you entered are not valid"
 };
 const not_logged_in = {
 	message: "You are not currently logged in"
 };
-
 const successful_logout = {
 	message: "You have been successfully logged out"
 };
 
+//Schemas for input validation.
 const input_schema = {
 	num1: Joi.number().required(),
 	num2: Joi.number().required()
 }
-
 const login_schema = {
 	username: Joi.string().required(),
 	password: Joi.string().required()
@@ -80,7 +76,12 @@ app.post('/login', (request, response) => {
 
 //API end point for logout function
 app.post('/logout', (request, response) => {
+	if (!request.session.user)	{
+		return response.status(200).send(not_logged_in);
+	}
 
+	request.session.destroy();
+	response.send(successful_logout);
 });
 
 //API end point for add function.
