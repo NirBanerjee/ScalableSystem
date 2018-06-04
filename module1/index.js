@@ -99,7 +99,7 @@ app.post('/add', (request, response) =>	{
 	var sum = num1 + num2;
 	var successful_action = {
 		message: "The action was successful",
-		result: sum.toString()
+		result: sum
 	}
 	response.send(successful_action)
 });
@@ -119,7 +119,7 @@ app.post('/multiply', (request, response) =>	{
 	var prod = num1 * num2;
 	var successful_action = {
 		message: "The action was successful",
-		result: prod.toString()
+		result: prod
 	}
 	response.send(successful_action)
 });
@@ -142,7 +142,7 @@ app.post('/divide', (request, response) =>	{
 	var quo = num1 / num2;
 	var successful_action = {
 		message: "The action was successful",
-		result: quo.toString()
+		result: quo
 	}
 	response.send(successful_action)
 });
