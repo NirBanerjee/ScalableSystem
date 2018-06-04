@@ -1,8 +1,27 @@
 const express = require('express');
 const Joi = require('joi');
 const session = require('express-session');
+const mysql = require('mysql');
 const app = express();
 const port = 3130;
+
+//Make Mysql connection
+const uName = process.env.MYSQL_USER;
+const pass = process.env.MYSQL_USER;
+const connection = mysql.createConnection({
+	host: 'localhost',
+	user: uName,
+	password: pass,
+	database: 'project1'
+});
+
+connection.connect((error) => {
+	if (error)	{
+		console.log("Error Connecting to Mysql");
+	}	else	{
+		console.log("Connection Made Successfully");
+	}
+});
 
 app.use(express.json());
 app.use(session({
@@ -10,22 +29,6 @@ app.use(session({
 	resave: "false",
 	saveUninitialized: "true"
 }));
-
-//Users
-const users = [
-	{
-		firstName: "Henry",
-		lastName: "Smith",
-		userName: "hsmith",
-		password: "smith"
-	},
-	{
-		firstName: "Tim",
-		lastName: "Bucktoo",
-		userName: "tbucktoo",
-		password: "bucktoo"
-	}
-];
 
 //All response messages
 const login_error = {
@@ -62,16 +65,25 @@ app.post('/login', (request, response) => {
 	var username = request.body.username;
 	var password = request.body.password;
 
-	const user = users.find(u => (u.userName === username && u.password === password));
-	if (!user)	{
-		return response.status(200).send(login_error);
-	}
-
-	request.session.user = user;
-	const successful_login = {
-		message: "Welcome " + user.firstName
-	};
-	response.send(successful_login)
+	const query = "SELECT * FROM users where username='" + username + "' AND password='" + password +"'";
+	console.log(query);
+	connection.query(query, (error, rows, fields) =>	{
+		if (error)	{
+			console.log("Error fetching user!!");
+			return response.status(200).send(login_error);
+		}	else	{
+			if (rows.length > 0)	{
+				request.session.user = rows[0];
+				console.log("Login Successful!!");
+				const successful_login = {
+					message: "Welcome " + rows[0].firstname
+				};
+				return response.status(200).send(successful_login);
+			}	else	{
+				return response.status(200).send(login_error);
+			}
+		}
+	});
 });
 
 //API end point for logout function
