@@ -1,6 +1,6 @@
 ---
 config:
-  target: http://localhost:3130
+  target: http://18.206.119.28:3130
   phases:
   - duration: 10
     arrivalCount: 100
