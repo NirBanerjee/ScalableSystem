@@ -1,11 +1,19 @@
 {
   "name": "module2",
   "version": "1.0.0",
-  "description": "Basic ECommerce System",
+  "description": "",
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
-  "author": "Nrimoho",
-  "license": "ISC"
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "body-parser": "^1.18.3",
+    "express": "^4.16.3",
+    "mysql2": "^1.5.3",
+    "nodemon": "^1.17.5",
+    "sequelize": "^4.37.10"
+  }
 }
