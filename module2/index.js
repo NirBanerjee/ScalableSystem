@@ -118,7 +118,17 @@ app.post('/login', (request, response) => {
 })
 
 //Logout EndPoint - for logging out the user.
-
+app.post('/logout', (request, response) => {
+	if (! request.session.username)	{
+		return response.json({
+			"message": "You are not currently logged in"
+		});
+	}
+	request.session.destroy();
+	response.json({
+		"message": "You have been successfully logged out"
+	});
+});
 
 //App Init
 app.listen(port, () => {
