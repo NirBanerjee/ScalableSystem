@@ -12,7 +12,7 @@ const sequelize = new Sequelize('project2', 'root', 'root', {
 });
 
 const Products = sequelize.define('products', {
-	aSin: {
+	asin: {
 		type: Sequelize.STRING,
 		required: true,
 		unique: true,
@@ -29,8 +29,9 @@ const Products = sequelize.define('products', {
 		allowNull: false
 	},
 	group: {
-		type: Sequelize.STRING,
+		type: Sequelize.ENUM,
 		required: true,
+		values:['Book', 'DVD', 'Music' ,'Electronics', 'Home', 'Beauty', 'Toys', 'Clothing', 'Sports', 'Automotive', 'Handmade'],
 		allowNull: false
 	}
 });

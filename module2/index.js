@@ -67,7 +67,7 @@ app.post('/register', (request, response) => {
 		.then(() => {
 			response.json({
 				"message": request.body.fName + " was registered successfully"
-			})
+			});
 		})
 		.catch((err) => {
 			console.log(err);
@@ -214,6 +214,33 @@ app.post('/updateInfo', (request, response) => {
 			"message": "The input you provided is not valid"
 		});
 	})
+});
+
+//addProducts EndPoint - for allowing admin to add a new product.
+app.post('/addProducts', (request, response) => {
+	if (! request.session.username)	{
+		return response.json({
+			"message": "You are not currently logged in"
+		});
+	}
+
+	if (request.session.role != "admin")	{
+		return response.json({
+			"message": "You must be an admin to perform this action"
+		});
+	}
+
+	Products.create(request.body)
+	.then(() => {
+		response.json({
+				"message": request.body.productName + " was successfully added to the system"
+		});
+
+	}).catch((err) => {
+		response.json({
+			"message": "The input you provided is not valid"
+		});
+	});
 });
 
 //App Init
