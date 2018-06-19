@@ -231,14 +231,6 @@ app.post('/addProducts', (request, response) => {
 		});
 	}
 
-	const group = request.body.group;
-	const groupList = ['Book', 'DVD', 'Music' ,'Electronics', 'Home', 'Beauty', 'Toys', 'Clothing', 'Sports', 'Automotive', 'Handmade'];
-
-	if (groupList.indexOf(group) > -1)	{
-		return response.json({
-			"message": "The input you provided is not valid"
-		});
-	}
 
 	Products.create(request.body)
 	.then(() => {
@@ -294,12 +286,6 @@ app.post('/modifyProduct', (request, response) => {
 		});
 	}
 
-	if (groupList.indexOf(group) > -1)	{
-		return response.json({
-			"message": "The input you provided is not valid"
-		});
-	}
-	
 	Products.findOne({
 		where: {
 			asin: asin
