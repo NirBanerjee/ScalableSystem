@@ -207,13 +207,13 @@ app.post('/updateInfo', (request, response) => {
 			response.json({
 				"message": "The input you provided is not valid”"
 			});
-		})
+		});
 	}).catch((err) => {
 		console.log(err);
 		response.json({
 			"message": "The input you provided is not valid"
 		});
-	})
+	});
 });
 
 //addProducts EndPoint - for allowing admin to add a new product.
@@ -237,6 +237,87 @@ app.post('/addProducts', (request, response) => {
 		});
 
 	}).catch((err) => {
+		response.json({
+			"message": "The input you provided is not valid"
+		});
+	});
+});
+
+//modifyProducts EndPoint - for allowing admin to modify existin product.
+app.post('/modifyProduct', (request, response) => {
+	if (! request.session.username)	{
+		return response.json({
+			"message": "You are not currently logged in"
+		});
+	}
+
+	if (request.session.role != "admin")	{
+		return response.json({
+			"message": "You must be an admin to perform this action"
+		});
+	}
+
+	const asin = request.body.asin;
+	const productName = request.body.productName;
+	const productDescription = request.body.productDescription;
+	const group = request.body.group;
+
+	console.log(asin);
+	console.log(productName);
+	console.log(productDescription);
+	console.log(group);
+
+	if (!asin || asin.length == 0)	{
+		return response.json({
+			"message": "The input you provided is not valid"
+		});
+	}
+	if (!productName || productName.length == 0)	{
+		return response.json({
+			"message": "The input you provided is not valid"
+		});
+	}
+	if (!productDescription || productDescription.length == 0)	{
+		return response.json({
+			"message": "The input you provided is not valid"
+		});
+	}
+	if (!group || group.length == 0)	{
+		return response.json({
+			"message": "The input you provided is not valid"
+		});
+	}
+
+	Products.findOne({
+		where: {
+			asin: asin
+		}
+	}).then((result) => {
+		var currProduct = result.dataValues;
+		currProduct["productName"] = productName;
+		currProduct["productDescription"] = productDescription;
+		console.log(currProduct);
+		Products.update(
+			currProduct,
+			{
+				where: {
+					asin: asin
+				}
+			}
+		).then(() => {
+			console.log("Record Updated!!!");
+			response.json({
+				"message": currProduct["productName"] + " was successfully updated"
+			});
+
+		}).catch((err) => {
+			console.log(err);
+			response.json({
+				"message": "The input you provided is not valid"
+			});
+		})
+	}).catch((err) => {
+		console.log(err);
 		response.json({
 			"message": "The input you provided is not valid"
 		});
