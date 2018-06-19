@@ -233,7 +233,7 @@ app.post('/addProducts', (request, response) => {
 	Products.create(request.body)
 	.then(() => {
 		response.json({
-				"message": request.body.productName + " was successfully added to the system"
+			"message": request.body.productName + " was successfully added to the system"
 		});
 
 	}).catch((err) => {
