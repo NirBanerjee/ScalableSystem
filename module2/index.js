@@ -392,6 +392,102 @@ app.post("/viewUsers", (request, response) => {
 	});
 });
 
+//viewProducts EndPoint - Allow user to view all products
+app.post('/viewProducts', (request, response) => {
+	var asin = request.body.asin;
+
+	if (typeof asin != 'undefined' && asin.length > 0)	{
+		console.log("In Here");
+		Products.findOne({
+			where: {
+				asin: asin
+			}
+		}).then((result) => {
+			console.log(result);
+			productArray = []
+			const currentProduct = result.dataValues;
+			const prodAsin = currentProduct.asin;
+			const prodName = currentProduct.productName;
+			const prodObj = {
+				"asin": prodAsin,
+				"productName": prodName
+			}
+			productArray[0] = prodObj;
+			response.json({
+				"product": productArray
+			})
+		}).catch((err) => {
+			console.log(err);
+			response.json({
+				"message": "There are no products that match that criteria"
+			});
+		});
+	}	else{
+		console.log("Not In THere");
+		var group = request.body.group;
+		var key = request.body.keyword;
+
+		if (!group || group.length == 0)	{
+			group = "%";
+		}	else{
+			group = "%" + group + "%"
+		}
+
+		if (!key || key.length == 0)	{
+			key = "%";
+		}	else{
+			key = "%" + key + "%";
+		}
+
+		Products.findAll({
+			where: {
+				group: {
+					$like: group
+				},
+				$or: [ 
+				{
+					productName: {
+						$like: key
+					}	
+				},
+				{
+					productDescription: {
+						$like: key
+					}
+				} ]
+			}
+		}).then((result) => {
+			if (result.length == 0)	{
+				response.json({
+					"message": "There are no users that match that criteria"
+				});
+			}	else{
+				productArray = [];
+				var i;
+				for (i = 0; i < result.length; i++)	{
+					const currentProduct = result[i].dataValues;
+					const asinId = currentProduct.asin;
+					const prodName = currentProduct.productName;
+					const prodObj = {
+						"asin": asinId,
+						"productName": prodName
+					}
+					productArray[i] = prodObj;
+				}
+				response.json({
+					"product": productArray
+				});
+			}
+
+		}).catch((err) => {
+			console.log(err);
+			response.json({
+				"message": "There was a problem executing the query"
+			});
+		});
+	}
+});
+
 //App Init
 app.listen(port, () => {
 	console.log('Listening on port - ' + port)
