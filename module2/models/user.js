@@ -57,6 +57,11 @@ const Users = sequelize.define('users', {
 		type: Sequelize.STRING,
 		required: true,
 		allowNull: false
+	},
+	role: {
+		type: Sequelize.STRING,
+		required: true,
+		allowNull: false
 	}
 });
 
