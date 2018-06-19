@@ -37,8 +37,8 @@ const login_schema = {
 app.get('/init', (request, response) => {
 	//Load the admin to database
 	const adminUser = {
-		fName: "Jenny",
-		lName: "Admin",
+		fname: "Jenny",
+		lname: "Admin",
 		username: "jadmin",
 		password: "admin",
 		address: "300, South Craig Street",
@@ -66,7 +66,7 @@ app.post('/register', (request, response) => {
 	Users.create(request.body)
 		.then(() => {
 			response.json({
-				"message": request.body.fName + " was registered successfully"
+				"message": request.body.fname + " was registered successfully"
 			});
 		})
 		.catch((err) => {
@@ -105,9 +105,10 @@ app.post('/login', (request, response) => {
 		const userData = result[0].dataValues;
 		request.session.username = userData.username;
 		request.session.role = userData.role;
-		request.session.firstname = userData.fName;
+		request.session.firstname = userData.fname;
+		console.log(userData);
 		response.json({
-			"message": "Welcome " + userData.fName
+			"message": "Welcome " + userData.fname
 		});
 	}).catch((err) => {
 		console.log(err);
@@ -149,8 +150,8 @@ app.post('/updateInfo', (request, response) => {
 		const userData = result.dataValues;
 		console.log(userData);
 		var userNameChanged = false;
-		const fName = request.body.fName;
-		const lName = request.body.lName;
+		const fname = request.body.fname;
+		const lname = request.body.lname;
 		const addr = request.body.address;
 		const city = request.body.city;
 		const state = request.body.state;
@@ -159,11 +160,11 @@ app.post('/updateInfo', (request, response) => {
 		const username = request.body.username;
 		const password = request.body.password;
 
-		if (typeof fName != 'undefined' && fName.length > 0)	{
-			userData["fName"] = fName;
+		if (typeof fname != 'undefined' && fname.length > 0)	{
+			userData["fname"] = fname;
 		}
-		if (typeof lName != 'undefined' && lName.length > 0)	{
-			userData["lName"] = lName;
+		if (typeof lname != 'undefined' && lname.length > 0)	{
+			userData["lname"] = lname;
 		}
 		if (typeof addr != 'undefined' && addr.length > 0)	{
 			userData["address"] = addr;
@@ -200,7 +201,7 @@ app.post('/updateInfo', (request, response) => {
 				request.session.username = userData["username"];
 			}
 			response.json({
-				"message": userData.fName + " your information was successfully updated"
+				"message": userData.fname + " your information was successfully updated"
 			});
 		}).catch((err) => {
 			console.log(err);
@@ -261,11 +262,7 @@ app.post('/modifyProduct', (request, response) => {
 	const productName = request.body.productName;
 	const productDescription = request.body.productDescription;
 	const group = request.body.group;
-
-	console.log(asin);
-	console.log(productName);
-	console.log(productDescription);
-	console.log(group);
+	const groupList = ['Book', 'DVD', 'Music' ,'Electronics', 'Home', 'Beauty', 'Toys', 'Clothing', 'Sports', 'Automotive', 'Handmade'];
 
 	if (!asin || asin.length == 0)	{
 		return response.json({
@@ -320,6 +317,77 @@ app.post('/modifyProduct', (request, response) => {
 		console.log(err);
 		response.json({
 			"message": "The input you provided is not valid"
+		});
+	});
+});
+
+//viewUsers endpoint - for allowing admin to view all users
+app.post("/viewUsers", (request, response) => {
+	if (! request.session.username)	{
+		return response.json({
+			"message": "You are not currently logged in"
+		});
+	}
+
+	if (request.session.role != "admin")	{
+		return response.json({
+			"message": "You must be an admin to perform this action"
+		});
+	}
+
+	var fnameQuery = request.body.fname;
+	var lnameQuery = request.body.lname;
+
+	if (!fnameQuery || fnameQuery.length == 0)	{
+		fnameQuery = "%";
+	}	else {
+		fnameQuery = "%" + fnameQuery + "%";
+	}
+
+	if (!lnameQuery || lnameQuery.length == 0)	{
+		lnameQuery = "%";
+	}	else {
+		lnameQuery = "%" + lnameQuery + "%";
+	}
+
+	Users.findAll({
+		where: {
+			fname: {
+				$like: fnameQuery
+			},
+			lname: {
+				$like: lnameQuery
+			}
+		}
+	}).then((result) => {
+		if (result.length == 0)	{
+			response.json({
+				"message": "There are no users that match that criteria"
+			});
+		}	else{
+			userArray = [];
+			var i;
+			for (i = 0; i < result.length; i++)	{
+				const currentUser = result[i].dataValues;
+				const fname = currentUser.fname;
+				const lname = currentUser.lname;
+				const userId = currentUser.username;
+				const userObj = {
+					"fname": fname,
+					"lname": lname,
+					"userId": userId
+				}
+				userArray[i] = userObj;
+			}
+			response.json({
+				"message": "The action was successful",
+				"user": userArray
+			});
+		}
+	}).catch((err) => {
+		console.log(err);
+		response.json({
+			"message": "There was some problem executing the query"
 		});
 	});
 });

@@ -12,12 +12,12 @@ const sequelize = new Sequelize('project2', 'root', 'root', {
 });
 
 const Users = sequelize.define('users', {
-	fName: {
+	fname: {
 		type: Sequelize.STRING,
 		required: true,
 		allowNull: false
 	},
-	lName: {
+	lname: {
 		type: Sequelize.STRING,
 		required: true,
 		allowNull: false
