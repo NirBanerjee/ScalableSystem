@@ -280,7 +280,7 @@ app.post('/modifyProduct', (request, response) => {
 			"message": "The input you provided is not valid"
 		});
 	}
-	if (!group || group.length == 0)	{
+	if (!group || group.length == 0 || groupList.indexOf(group) > -1)	{
 		return response.json({
 			"message": "The input you provided is not valid"
 		});
