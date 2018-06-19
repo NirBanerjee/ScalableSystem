@@ -15,24 +15,28 @@ const Products = sequelize.define('products', {
 	aSin: {
 		type: Sequelize.STRING,
 		required: true,
-		unique: true
+		unique: true,
+		allowNull: false
 	},
 	productName: {
 		type: Sequelize.STRING,
-		required: true
+		required: true,
+		allowNull: false
 	},
 	productDescription: {
 		type: Sequelize.TEXT,
-		required: true
+		required: true,
+		allowNull: false
 	},
 	group: {
 		type: Sequelize.STRING,
-		required: true
+		required: true,
+		allowNull: false
 	}
 });
 
 sequelize.sync({
-  force: true
+	logging: console.log
 })
   .then(() => {
     console.log("Query executed Successfully!!!")

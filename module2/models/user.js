@@ -12,47 +12,56 @@ const sequelize = new Sequelize('project2', 'root', 'root', {
 });
 
 const Users = sequelize.define('users', {
-	firstName: {
+	fName: {
 		type: Sequelize.STRING,
-		required: true
+		required: true,
+		allowNull: false
 	},
-	lastName: {
+	lName: {
 		type: Sequelize.STRING,
-		required: true
+		required: true,
+		allowNull: false
 	},
 	address: {
 		type: Sequelize.STRING,
-		required: true
+		required: true,
+		allowNull: false
 	},
 	city: {
 		type: Sequelize.STRING,
-		required: true
+		required: true,
+		allowNull: false
 	},
 	state: {
 		type: Sequelize.STRING,
-		required: true
+		required: true,
+		allowNull: false
 	},
 	zip: {
 		type: Sequelize.STRING,
-		required: true
+		required: true,
+		allowNull: false
 	},
 	email: {
 		type: Sequelize.STRING,
-		required: true
+		required: true,
+		allowNull: false
 	},
 	username: {
 		type: Sequelize.STRING,
 		required: true,
-		unique: true
+		unique: true,
+		allowNull: false
 	},
 	password: {
 		type: Sequelize.STRING,
-		required: true
+		required: true,
+		allowNull: false
 	}
 });
 
 sequelize.sync({
-  force: true
+	logging: console.log
 })
   .then(() => {
     console.log("Query executed Successfully!!!")
