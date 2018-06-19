@@ -234,7 +234,7 @@ app.post('/addProducts', (request, response) => {
 	const groupList = ['Book', 'DVD', 'Music' ,'Electronics', 'Home', 'Beauty', 'Toys', 'Clothing', 'Sports', 'Automotive', 'Handmade'];
 	const grp = request.body.group;
 	console.log(grp);
-	if (!group || group.length == 0 || groupList.indexOf(grp) < 0)	{
+	if (!grp || grp.length == 0 || groupList.indexOf(grp) < 0)	{
 		response.json({
 			"message": "The input you provided is not valid"
 		});
@@ -288,7 +288,7 @@ app.post('/modifyProduct', (request, response) => {
 			"message": "The input you provided is not valid"
 		});
 	}
-	if (!group || group.length == 0 || groupList.indexOf(grp) < 0)	{
+	if (!group || group.length == 0 || groupList.indexOf(group) < 0)	{
 		response.json({
 			"message": "The input you provided is not valid"
 		});
