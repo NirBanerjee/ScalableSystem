@@ -1,6 +1,6 @@
 const Sequelize      = require('sequelize');
-const sequelize = new Sequelize('project2', 'root', 'root', {
-  host: 'localhost',
+const sequelize = new Sequelize('project2', 'root', 'Caseclosed12', {
+  host: 'project2-ediss.chkfvdagmrkj.us-east-1.rds.amazonaws.com',
   dialect: 'mysql',
   port: 3306,
   pool: {

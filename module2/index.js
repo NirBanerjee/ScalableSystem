@@ -60,7 +60,7 @@ app.get('', (request, response) => {
 });
 
 //Register EndPoint - for registering new user.
-app.post('/register', (request, response) => {
+app.post('/registerUser', (request, response) => {
 	request.body["role"] = "customer";
 	console.log(request.body);
 	Users.create(request.body)
