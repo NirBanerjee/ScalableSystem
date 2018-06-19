@@ -113,7 +113,7 @@ app.post('/login', (request, response) => {
 		console.log(err);
 		response.json({
 			"message": "There seems to be an issue with the username/password combination that you entered"
-		})
+		});
 	});
 })
 
@@ -128,6 +128,92 @@ app.post('/logout', (request, response) => {
 	response.json({
 		"message": "You have been successfully logged out"
 	});
+});
+
+//updateInfo EndPoint - for allowing a user to update his contact details.
+app.post('/updateInfo', (request, response) => {
+	if (! request.session.username)	{
+		return response.json({
+			"message": "You are not currently logged in"
+		});
+	}
+
+	const currentUserName = request.session.username;
+	console.log(currentUserName);
+
+	Users.findOne({
+		where: {
+			username: currentUserName
+		}
+	}).then((result) => {
+		const userData = result.dataValues;
+		console.log(userData);
+		var userNameChanged = false;
+		const fName = request.body.fName;
+		const lName = request.body.lName;
+		const addr = request.body.address;
+		const city = request.body.city;
+		const state = request.body.state;
+		const zip = request.body.zip;
+		const email = request.body.email;
+		const username = request.body.username;
+		const password = request.body.password;
+
+		if (typeof fName != 'undefined' && fName.length > 0)	{
+			userData["fName"] = fName;
+		}
+		if (typeof lName != 'undefined' && lName.length > 0)	{
+			userData["lName"] = lName;
+		}
+		if (typeof addr != 'undefined' && addr.length > 0)	{
+			userData["address"] = addr;
+		}
+		if (typeof city != 'undefined' && city.length > 0)	{
+			userData["city"] = city;
+		}
+		if (typeof state != 'undefined' && state.length > 0)	{
+			userData["state"] = state;
+		}
+		if (typeof zip != 'undefined' && zip.length > 0)	{
+			userData["zip"] = zip;
+		}
+		if (typeof email != 'undefined' && email.length > 0)	{
+			userData["email"] = email;
+		}
+		if (typeof username != 'undefined' && username.length > 0)	{
+			userData["username"] = username;
+			userNameChanged = true;
+		}
+		if (typeof password != 'undefined' && password.length > 0)	{
+			userData["password"] = password;
+		}
+		console.log(userData);
+		Users.update(
+			userData,
+			{
+				where: {
+					username: currentUserName
+				}
+			}
+		).then(() => {
+			if (userNameChanged)	{
+				request.session.username = userData["username"];
+			}
+			response.json({
+				"message": userData.fName + " your information was successfully updated"
+			});
+		}).catch((err) => {
+			console.log(err);
+			response.json({
+				"message": "The input you provided is not valid”"
+			});
+		})
+	}).catch((err) => {
+		console.log(err);
+		response.json({
+			"message": "The input you provided is not valid"
+		});
+	})
 });
 
 //App Init
