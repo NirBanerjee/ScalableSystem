@@ -89,7 +89,7 @@ router.post('/login', (request, response) => {
 		console.log(user);
 		const fname = user.fname;
 		const username = user.username;
-		request.session.username = fname;
+		request.session.username = username;
 		if (username === admin_schema.username)	{
 			request.session.role = "admin";
 		}	else	{
@@ -130,5 +130,99 @@ router.post('/logout', (request, response) => {
 		"message": "You have been successfully logged out"
 	});
 });
+
+//Update User Information Endpoint
+router.post('/updateInfo', (request, response) => {
+	console.log("=============================")
+	console.log("Update Info Action");
+	console.log("================");
+	console.log(request.body);
+	console.log("================");
+
+	if (! request.session.username)	{
+		console.log("Not logged in");
+		return response.json({
+			"message": "You are not currently logged in"
+		});
+	}
+
+	const currUsername = request.session.username;
+	console.log(currUsername);
+	console.log(request.session.role);
+	const fname = request.body.fname;
+	const lname = request.body.lname;
+	const addr = request.body.address;
+	const city = request.body.city;
+	const state = request.body.state;
+	const zip = request.body.zip;
+	const email = request.body.email;
+	const username = request.body.username;
+	const password = request.body.password;
+	var userNameChanged = false;
+
+	User.findOne({
+		username: currUsername
+	})
+	.then((user) => {
+		if (typeof fname != 'undefined' && fname.length > 0)	{
+			user.fname = fname;
+		}
+		if (typeof lname != 'undefined' && lname.length > 0)	{
+			user.lname = lname;
+		}
+		if (typeof addr != 'undefined' && addr.length > 0)	{
+			user.address = addr;
+		}
+		if (typeof city != 'undefined' && city.length > 0)	{
+			user.city = city;
+		}
+		if (typeof state != 'undefined' && state.length > 0)	{
+			user.state = state;
+		}
+		if (typeof zip != 'undefined' && zip.length > 0)	{
+			user.zip = zip;
+		}
+		if (typeof email != 'undefined' && email.length > 0)	{
+			user.email = email;
+		}
+		if (typeof username != 'undefined' && username.length > 0)	{
+			user.username = username;
+			userNameChanged = true;
+		}
+		if (typeof password != 'undefined' && password.length > 0)	{
+			user.password = password;
+		}
+		console.log("New User Details");
+		console.log(user);
+		user.save()
+		.then((result) => {
+			console.log("User updated successfully");
+			console.log("================");
+			if (userNameChanged)	{
+				request.session.username = user.username;
+			}
+			response.json({
+				"message": user.fname + " your information was successfully updated"
+			});
+		})
+		.catch((err) => {
+			console.log("Information not updated");
+			console.log(err);
+			console.log("================");
+			response.json({
+				"message": "The input you provided is not valid”"
+			});
+		})
+	})
+	.catch((err) => {
+		console.log("User not found");
+		console.log(err);
+		console.log("================");
+		response.json({
+			"message": "The input you provided is not valid”"
+		});
+	});
+})
+
 
 module.exports = router;
