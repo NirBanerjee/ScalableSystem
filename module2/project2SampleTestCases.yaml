@@ -1,9 +1,9 @@
 ---
 config:
-  target: http://ubuntu@ec2-34-227-22-79.compute-1.amazonaws.com:3130
+  target: http://EDISS-Proj3-692673919.us-east-1.elb.amazonaws.com:3130
   phases:
-  - duration: 1
-    arrivalCount: 1
+  - duration: 100
+    arrivalCount: 100
   payload:
   - path: UserData.csv
     fields:
