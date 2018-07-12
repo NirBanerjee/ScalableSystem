@@ -27,8 +27,31 @@ router.get('/init', (request, response) => {
 	});
 });
 
-router.get('/registerUser', (request, response) => {
-	response.send("Hello from Router File")
+router.post('/registerUser', (request, response) => {
+	console.log("Request Received");
+	console.log("================");
+	console.log(request.body);
+	console.log("================");
+	new User(request.body)
+	.save()
+	.then(user => {
+		console.log("User Added Successfully.");
+		const resp = {
+			"message": request.body.fname + " was registered successfully"
+		}
+		console.log(resp);
+		console.log("================");
+		response.json(resp);
+	})
+	.catch((err) => {
+		console.log(err);
+		console.log("================");
+		response.json({
+			"message": "The input you provided is not valid"
+		});
+	});
 });
+
+
 
 module.exports = router;

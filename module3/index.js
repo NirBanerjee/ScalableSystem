@@ -15,6 +15,10 @@ mongoose.connect('mongodb://localhost/project3')
 .then(() => console.log('MongoDB Connected....'))
 .catch(err => console.log(err));
 
+//Body Parser - Middleware
+app.use(bodyParser.urlencoded({extended: false}));
+app.use(bodyParser.json());
+
 //Call the routes
 app.use('/', users);
 
