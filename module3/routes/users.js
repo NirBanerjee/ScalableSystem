@@ -147,8 +147,6 @@ router.post('/updateInfo', (request, response) => {
 	}
 
 	const currUsername = request.session.username;
-	console.log(currUsername);
-	console.log(request.session.role);
 	const fname = request.body.fname;
 	const lname = request.body.lname;
 	const addr = request.body.address;
@@ -223,6 +221,5 @@ router.post('/updateInfo', (request, response) => {
 		});
 	});
 })
-
 
 module.exports = router;
