@@ -1,6 +1,19 @@
 const express = require('express');
 const router = express.Router();
 const mongoose = require('mongoose');
+const Joi = require('joi');
+
+//Validation Schema for Login
+const login_schema = {
+	username: Joi.string().required(),
+	password: Joi.string().required()
+}
+
+//Admin Schema
+const admin_schema = {
+	username: "jadmin",
+	password: "admin"
+}
 
 //Load User Model
 require('../models/User');
@@ -27,8 +40,10 @@ router.get('/init', (request, response) => {
 	});
 });
 
+//Register User End Point
 router.post('/registerUser', (request, response) => {
-	console.log("Request Received");
+	console.log("=============================")
+	console.log("Register Action");
 	console.log("================");
 	console.log(request.body);
 	console.log("================");
@@ -52,6 +67,68 @@ router.post('/registerUser', (request, response) => {
 	});
 });
 
+//Login EndPoint
+router.post('/login', (request, response) => {
+	console.log("=============================")
+	console.log("Login Action");
+	console.log("================");
+	console.log(request.body);
+	console.log("================");
 
+	const validation_result = Joi.validate(request.body, login_schema);
+	if (validation_result.error)	{
+		console.log("Login Schema Validation Error");
+		console.log("================");
+		return response.json({
+			"message": "There seems to be an issue with the username/password combination that you entered"
+		});
+	}
+
+	User.findOne(request.body)
+	.then((user) => {
+		console.log(user);
+		const fname = user.fname;
+		const username = user.username;
+		request.session.username = fname;
+		if (username === admin_schema.username)	{
+			request.session.role = "admin";
+		}	else	{
+			request.session.role = "user";
+		}
+		console.log("Logged in successfully");
+		console.log("================");
+		response.json({
+			"message": "Welcome " + fname
+		});
+	})
+	.catch((err) =>	{
+		console.log(err);
+		console.log("================");
+		response.json({
+			"message": "There seems to be an issue with the username/password combination that you entered"
+		});
+	});
+});
+
+//Logout EndPoint
+router.post('/logout', (request, response) => {
+	console.log("=============================")
+	console.log("Log out Action");
+	console.log("================");
+	if (! request.session.username)	{
+		console.log("No login found");
+		console.log("================");
+		return response.json({
+			"message": "You are not currently logged in"
+		});
+	}
+
+	request.session.destroy();
+	console.log("Logged out Successfully");
+	console.log("================");
+	response.json({
+		"message": "You have been successfully logged out"
+	});
+});
 
 module.exports = router;
