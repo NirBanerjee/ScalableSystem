@@ -222,4 +222,76 @@ router.post('/updateInfo', (request, response) => {
 	});
 })
 
+//View Users Endpoint
+router.post('/viewUsers', (request, response) => {
+	console.log("=============================")
+	console.log("View Users Action");
+	console.log("================");
+	console.log(request.body);
+	console.log("================");
+
+	if (! request.session.username)	{
+		console.log("Not logged in");
+		return response.json({
+			"message": "You are not currently logged in"
+		});
+	}
+
+	if (request.session.role != "admin")	{
+		console.log("Not an admin");
+		return response.json({
+			"message": "You must be an admin to perform this action"
+		});
+	}
+
+	var fnameQuery = request.body.fname;
+	var lnameQuery = request.body.lname;
+
+	if (!fnameQuery || fnameQuery.length == 0)	{
+		fnameQuery = "";
+	}
+
+	if (!lnameQuery || lnameQuery.length == 0)	{
+		lnameQuery = "";
+	}
+
+	User.find({
+		fname: new RegExp('^' + fnameQuery, 'i'),
+		lname: new RegExp('^' + lnameQuery, 'i')
+	})
+	.then((rows) => {
+		console.log(rows.length + " records returned");
+		if (rows.length == 0)	{
+			return response.json({
+				"message": "There are no users that match that criteria"
+			});
+		}
+
+		userArray = [];
+		var i;
+
+		for (i = 0; i < rows.length; i++)	{
+			const userObj = {
+				"fname": rows[i].fname,
+				"lname": rows[i].lname,
+				'userId': rows[i].username
+			}
+			userArray[i] = userObj;
+		}
+		console.log(userArray);
+		response.json({
+			"message": "Action was successful",
+			"user": userArray
+		});
+	})
+	.catch((err) => {
+		console.log("Error Executing Query");
+		console.log("=====================");
+		console.log(err);
+		return response.json({
+			"message": "There are no users that match that criteria"
+		});
+	});
+});
+
 module.exports = router;
