@@ -17,7 +17,10 @@ const admin_schema = {
 
 //Load User Model
 require('../models/User');
+require('../models/Recommendation');
+
 const User = mongoose.model('user');
+const Recommendation = mongoose.model('recommendation');
 
 //Init end-point for adding admin
 router.get('/init', (request, response) => {
@@ -25,7 +28,7 @@ router.get('/init', (request, response) => {
 	const adminUser = {
 		fname: "Jenny",
 		lname: "Admin",
-		username: "jadmin",
+		username: "jennyAdmin",
 		password: "admin",
 		address: "300, South Craig Street",
 		email: "jadmin@cmu.com",
@@ -35,8 +38,12 @@ router.get('/init', (request, response) => {
 	}
 	new User(adminUser)
 	.save()
-	.then(user => {
+	.then((user) => {
 		response.json(user);
+	})
+	.catch((err) => {
+		console.log(err);
+		response.json(err);
 	});
 });
 

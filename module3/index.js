@@ -7,6 +7,7 @@ const session = require('express-session');
 const port = 3130;
 
 const users = require('./routes/users')
+const products = require('./routes/products')
 
 //Session Middleware
 app.use(cookieParser());
@@ -30,11 +31,17 @@ mongoose.connect('mongodb://localhost/project3')
 .catch(err => console.log(err));
 
 //Body Parser - Middleware
-app.use(bodyParser.urlencoded({extended: false}));
+app.use(bodyParser.urlencoded({
+	extended: true,
+	parameterLimit: 1000000,
+    limit: '500mb',
+}));
+
 app.use(bodyParser.json());
 
 //Call the routes
 app.use('/', users);
+app.use('/', products);
 
 app.listen(port, () => {
 	console.log(`Server started, port = ${port}`);

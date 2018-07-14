@@ -15,18 +15,12 @@ const ProductSchema = new Schema({
 		allowNull: false
 	},
 	productDescription: {
-		type: String,
-		required: true,
-		allowNull: false
+		type: String
 	},
 	group: [
-		[
-			{
-				type: String,
-				required: true,
-				allowNull: false
-			}
-		]
+		{
+			type: String
+		}
 	]
 });
 
