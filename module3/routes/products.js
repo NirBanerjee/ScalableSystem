@@ -337,7 +337,7 @@ router.post("/buyProducts", (request, response) => {
 		console.log("Recommendation DB Updated");
 		console.log(retMsg);
 		return response.send({
-			"message": "“The action was successful"
+			"message": "The action was successful"
 		});
 	})
 	.catch((err) => {
@@ -464,7 +464,7 @@ router.post("/getRecommendations", (request, response) => {
 			recommendationArr.push(obj);
 		}
 		response.json({
-			"message": "“The action was successful",
+			"message": "The action was successful",
 			"products": recommendationArr
 		});
 	})

@@ -1,6 +1,6 @@
 ---
 config:
-  target: http://localhost:3130
+  target: http://ec2-34-238-193-217.compute-1.amazonaws.com:3130
   phases:
   - duration: 1
     arrivalCount: 1
@@ -105,17 +105,3 @@ scenarios:
       match:
         json: "$.product[*].productName"
         value: Sound of Music
-  - post:
-      url: "/buyProducts"
-      json:
-        asin: "{{{asin}}"
-      match:
-        json: "$.message"
-        value: "The action was successful"
-  - post:
-      url: "/buyProducts"
-      json:
-        asin: "{{{asin}}}}"
-      match:
-        json: "$.message"
-        value: "The action was successful"
