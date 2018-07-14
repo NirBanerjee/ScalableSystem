@@ -28,7 +28,7 @@ router.get('/init', (request, response) => {
 	const adminUser = {
 		fname: "Jenny",
 		lname: "Admin",
-		username: "jennyAdmin",
+		username: "jadmin",
 		password: "admin",
 		address: "300, South Craig Street",
 		email: "jadmin@cmu.com",

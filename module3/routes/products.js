@@ -83,7 +83,7 @@ router.post("/addProducts", (request, response) => {
 	})
 });
 
-router.post("/modifyProducts", (request, response) => {
+router.post("/modifyProduct", (request, response) => {
 	console.log("=============================")
 	console.log("Modify Products Action");
 	console.log("================");
@@ -314,21 +314,13 @@ router.post("/buyProducts", (request, response) => {
 			recommendationMap[key] = new Array();
 		}
 
-		console.log(JSON.stringify(recommendationMap), recommendationMap instanceof Array)
-
-		console.log("in loop")
 		Object.keys(recommendationMap).forEach((key) => {
-			console.log("start", key, recommendationMap[key], recommendationMap[key] instanceof Array);
-			for(var i=0;i<productList.length;i++) {
+			for(var i = 0; i < productList.length; i++) {
 				if(key!== productList[i].asin) {
 					recommendationMap[key].push(productList[i].asin);
 				}
 			}
-			console.log("end", key,recommendationMap[key], recommendationMap[key] instanceof Array);
 		})
-
-		console.log("end loop")
-
 		console.log(JSON.stringify(recommendationMap), recommendationMap instanceof Array);
 
 		var searchPromiseList = [];
