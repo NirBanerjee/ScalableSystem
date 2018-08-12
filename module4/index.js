@@ -26,7 +26,7 @@ app.use(session({
 mongoose.Promise = global.Promise;
 
 //MongoDB and Mongoose Connections
-mongoose.connect('mongodb://ec2-54-158-41-20.compute-1.amazonaws.com:27017/project4')
+mongoose.connect("mongodb://ec2-54-158-41-20.compute-1.amazonaws.com:27017/project4")
 .then(() => console.log('MongoDB Connected....'))
 .catch(err => console.log(err));
 
